@@ -23,7 +23,6 @@ const Login = (props: ILoginProps) => {
       }),
     );
     if (isNull(err)) {
-      console.log(res);
       await localforage.setItem('access_token', res.accessToken);
       await localforage.setItem('refresh_token', res.refreshToken);
       await localforage.setItem('user_info', res.userInfo);
@@ -40,7 +39,7 @@ const Login = (props: ILoginProps) => {
       onFinish={handleFinish}
       initialValues={{
         username: 'zhangsan',
-        password: '333333',
+        password: '123456',
       }}
     >
       <ProFormText
