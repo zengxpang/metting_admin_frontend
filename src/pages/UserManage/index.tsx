@@ -11,21 +11,26 @@ const UserManage = () => {
     {
       dataIndex: 'index',
       valueType: 'indexBorder',
+      key: 'index',
       width: 48,
     },
     {
       title: '用户名',
       dataIndex: 'username',
+      key: 'username',
       copyable: true,
+      width: 100,
     },
     {
       title: '昵称',
       dataIndex: 'nickName',
+      key: 'nickName',
       copyable: true,
     },
     {
       title: '邮箱',
       dataIndex: 'email',
+      key: 'email',
       copyable: true,
       ellipsis: true,
       tip: '邮箱过长会自动收缩',
@@ -33,6 +38,7 @@ const UserManage = () => {
     {
       title: '头像',
       dataIndex: 'headPic',
+      key: 'headPic',
       hideInSearch: true,
       render: (_, record) => {
         return record.headPic ? (
@@ -50,6 +56,7 @@ const UserManage = () => {
     {
       title: '电话',
       dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
       ellipsis: true,
       tip: '邮箱过长会自动收缩',
       hideInSearch: true,
@@ -57,6 +64,8 @@ const UserManage = () => {
     {
       title: '是否冻结',
       dataIndex: 'isFreeze',
+      width: 80,
+      key: 'isFreeze',
       hideInSearch: true,
       render: (_, record) => {
         return (
@@ -69,7 +78,9 @@ const UserManage = () => {
     {
       title: '是否管理员',
       dataIndex: 'isAdmin',
+      key: 'isAdmin',
       hideInSearch: true,
+      width: 100,
       render: (_, record) => {
         return (
           <Tag color={record.isAdmin ? 'red' : 'green'}>
@@ -84,6 +95,7 @@ const UserManage = () => {
       dataIndex: 'createTime',
       valueType: 'date',
       sorter: true,
+      width: 100,
       hideInSearch: true,
     },
     {
@@ -92,6 +104,7 @@ const UserManage = () => {
       dataIndex: 'updateTime',
       valueType: 'date',
       sorter: true,
+      width: 100,
       hideInSearch: true,
     },
   ];
@@ -100,6 +113,7 @@ const UserManage = () => {
       rowKey={'id'}
       columns={columns}
       actionRef={actionRef}
+      scroll={{ x: 'max-content' }}
       request={async (params) => {
         const { current, pageSize, username, ...restParams } = params;
         const [_, data] = await to(

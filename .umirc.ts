@@ -24,28 +24,13 @@ export default defineConfig({
   routes: [
     {
       path: '/',
-      redirect: '/home',
-    },
-    {
-      name: '首页',
-      path: '/home',
-      component: './Home',
+      redirect: '/meetingRoomManage',
     },
     {
       name: '登录',
       path: '/login',
       component: './Login',
       layout: false,
-    },
-    {
-      name: '用户管理',
-      path: '/userManage',
-      component: './UserManage',
-    },
-    {
-      name: '预定管理',
-      path: 'scheduleManage',
-      component: './ScheduleManage',
     },
     {
       name: '修改信息',
@@ -58,6 +43,21 @@ export default defineConfig({
       path: '/updatePassword',
       component: './UpdatePassword',
       hideInMenu: true,
+    },
+    {
+      name: '会议室管理',
+      path: '/meetingRoomManage',
+      component: './MeetingRoomManage',
+    },
+    {
+      name: '用户管理',
+      path: '/userManage',
+      component: './UserManage',
+    },
+    {
+      name: '预定管理',
+      path: 'scheduleManage',
+      component: './ScheduleManage',
     },
   ],
   npmClient: 'pnpm',
