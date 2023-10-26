@@ -6,67 +6,67 @@ import {
 } from '@ant-design/pro-components';
 import { message } from 'antd';
 import to from 'await-to-js';
-import { isEmpty, isNull, map } from 'lodash-es';
+import { isEmpty, isNull } from 'lodash-es';
 import { useMemo, useRef } from 'react';
 
 import { CREATE_MEETING_ROOM, UPDATE_MEETING_ROOM } from './constants';
+import { createMeetingRoom, IMeetingRoom, updateMeetingRoom } from '@/services';
 
 interface ICreateAndUpdateDrawerProps {
   trigger: JSX.Element;
   onSubmit: () => void;
-  data?: IKeyValue;
+  data?: IMeetingRoom;
 }
 
 const CreateAndUpdateDrawer = (props: ICreateAndUpdateDrawerProps) => {
   const { trigger, onSubmit, data } = props;
   const formRef = useRef<ProFormInstance>(null);
 
+  const title = useMemo(() => {
+    return isEmpty(data) ? CREATE_MEETING_ROOM : UPDATE_MEETING_ROOM;
+  }, [data]);
+
+  const msg = useMemo(() => {
+    return isEmpty(data) ? CREATE_MEETING_ROOM : UPDATE_MEETING_ROOM + '成功';
+  }, [data]);
+
   const handleOpenChange = (open: boolean) => {
     if (open && !isEmpty(data)) {
-      const {
-        name,
-        template: { id: templateId },
-        channel: { id: channelId },
-      } = data;
+      const { capacity, description, equipment, name, location } = data;
       // 设置了drawer的forceRender预渲染这里forRef.current 才不为null
       formRef?.current?.setFieldsValue({
         name,
-        templateId,
-        channelId,
+        capacity,
+        location,
+        equipment,
+        description,
       });
     }
   };
 
   const handleFinish = async (values: any) => {
-    // const msg = isEmpty(data) ? '创建组件成功' : '编辑组件成功';
-    // if (isEmpty(data)) {
-    //   const [error] = await to(createModuleRequest(values));
-    //   if (isNull(error)) {
-    //     message.success(msg);
-    //     onSubmit();
-    //   }
-    // } else {
-    //   const id = data?.id;
-    //   const isDeleted = data?.isDeleted;
-    //   const params = {
-    //     ...values,
-    //     id,
-    //     isDeleted,
-    //   };
-    //   const [error] = await to(updateModuleRequest(params));
-    //   if (isNull(error)) {
-    //     message.success(msg);
-    //     onSubmit();
-    //   }
-    // }
-    //
+    if (isEmpty(data)) {
+      const [error] = await to(createMeetingRoom(values));
+      if (isNull(error)) {
+        message.success(msg);
+        onSubmit();
+      }
+    } else {
+      const id = data?.id;
+      const params = {
+        ...values,
+        id,
+      };
+      const [error] = await to(updateMeetingRoom(params));
+      if (isNull(error)) {
+        message.success(msg);
+        onSubmit();
+      }
+    }
+
     // 不返回不会关闭弹框
     return true;
   };
-
-  const title = useMemo(() => {
-    return isEmpty(data) ? CREATE_MEETING_ROOM : UPDATE_MEETING_ROOM;
-  }, [data]);
 
   return (
     <DrawerForm
@@ -135,7 +135,7 @@ const CreateAndUpdateDrawer = (props: ICreateAndUpdateDrawerProps) => {
         ]}
       />
       <ProFormText
-        name="equipment"
+        name="description"
         label="描述"
         placeholder="请输入描述"
         rules={[

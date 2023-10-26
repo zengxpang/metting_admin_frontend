@@ -3,7 +3,7 @@ import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { request } from '@umijs/max';
 import to from 'await-to-js';
 import { Button, message, Popconfirm, Tag } from 'antd';
-import { deleteMeetingRoom } from '@/services';
+import { deleteMeetingRoom, IMeetingRoom } from '@/services';
 import { isNull } from 'lodash-es';
 import CreateAndUpdateDrawer from '@/pages/MeetingRoomManage/components/CreateAndUpdateDrawer';
 
@@ -116,7 +116,10 @@ const MeetingRoomManage = (props: IMeetingRoomManageProps) => {
         </Popconfirm>,
         <CreateAndUpdateDrawer
           key={'update'}
-          onSubmit={() => {}}
+          onSubmit={() => {
+            actionRef.current?.reload();
+          }}
+          data={record as IMeetingRoom}
           trigger={
             <Button type={'primary'} ghost size={'small'}>
               更新
@@ -151,6 +154,15 @@ const MeetingRoomManage = (props: IMeetingRoomManageProps) => {
           total: data?.totalCount ?? 0,
         };
       }}
+      toolBarRender={() => [
+        <CreateAndUpdateDrawer
+          key="create"
+          onSubmit={() => {
+            actionRef.current?.reload();
+          }}
+          trigger={<Button>创建会议室</Button>}
+        />,
+      ]}
     />
   );
 };
