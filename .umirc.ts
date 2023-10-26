@@ -53,6 +53,12 @@ export default defineConfig({
       component: './UpdateInfo',
       hideInMenu: true,
     },
+    {
+      name: '忘记密码',
+      path: '/updatePassword',
+      component: './UpdatePassword',
+      hideInMenu: true,
+    },
   ],
   npmClient: 'pnpm',
 });
