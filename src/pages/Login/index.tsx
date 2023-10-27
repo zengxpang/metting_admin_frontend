@@ -29,7 +29,7 @@ const Login = (props: ILoginProps) => {
       message.success('登录成功');
       navigate('/');
     } else {
-      message.error(err.data);
+      message.error(err.data || err);
     }
   };
   return (
