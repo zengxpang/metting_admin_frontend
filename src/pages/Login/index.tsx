@@ -3,12 +3,13 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link, request } from '@umijs/max';
 import to from 'await-to-js';
 import { isNull } from 'lodash-es';
-import { Image, message, Tabs } from 'antd';
+import { Image, message, Tabs, TabsProps } from 'antd';
 import localforage from 'localforage';
 import { useNavigate } from '@umijs/max';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { QRCODE_STATUS_MAP_TITLE } from './constants';
+import { useRafInterval, useUnmount } from 'ahooks';
 
 // no-scan 未扫描
 // scan-wait-confirm -已扫描，等待用户确认
@@ -23,28 +24,48 @@ type IQrcodeStatus =
   | 'scan-confirm'
   | 'scan-cancel'
   | 'expired';
+interface IQrcodeInfo {
+  image: string;
+  qrcodeId: string;
+}
 
 interface ILoginProps {}
 
 const Login = (props: ILoginProps) => {
   const navigate = useNavigate();
   const [loginType, setLoginType] = useState<ILoginType>('account');
-  const [qrcodeInfo, setQrcodeInfo] = useState<IKeyValue>({});
+  const [qrcodeInfo, setQrcodeInfo] = useState<IQrcodeInfo | undefined>(
+    undefined,
+  );
   const [qrcodeStatus, setQrcodeStatus] = useState<IQrcodeStatus>('no-scan');
+  const [delay, setDelay] = useState<number | undefined>(undefined); // undefined 为不轮询
 
   const generateQrcode = async () => {
-    const [err, res] = await to(request('/qrcode/generate'));
+    const [err, res] = await to<IQrcodeInfo>(request('/qrcode/generate'));
     if (isNull(err)) {
       setQrcodeInfo(res);
+      setDelay(1000);
     }
   };
 
   const checkQrcode = async () => {
-    const [err, res] = await to(request('/qrcode/check'));
+    if (!qrcodeInfo) return;
+    const [err, res] = await to<{
+      status: IQrcodeStatus;
+      userInfo?: IKeyValue;
+    }>(request(`/qrcode/check?qrcodeId=${qrcodeInfo.qrcodeId}`));
     if (isNull(err)) {
-      console.log(res);
+      setQrcodeStatus(res!.status);
     }
   };
+
+  const clear = useRafInterval(async () => {
+    await checkQrcode();
+  }, delay);
+
+  useUnmount(() => {
+    clear();
+  });
 
   const handleFinish = async (values: {
     username: string;
@@ -70,25 +91,17 @@ const Login = (props: ILoginProps) => {
   const handleLoginTypeChange = async (key: string) => {
     if (key === 'scan') {
       await generateQrcode();
+    } else {
+      setDelay(undefined);
     }
     setLoginType(key as ILoginType);
   };
 
-  return (
-    <LoginForm
-      title="会议室预定系统管理端"
-      subTitle="zxp"
-      onFinish={handleFinish}
-      initialValues={{
-        username: 'zhangsan',
-        password: '123456',
-      }}
-    >
-      <Tabs centered activeKey={loginType} onChange={handleLoginTypeChange}>
-        <Tabs.TabPane tab="账户密码登录" key="account" />
-        <Tabs.TabPane tab="扫码登录" key="scan" />
-      </Tabs>
-      {loginType === 'account' && (
+  const items: TabsProps['items'] = [
+    {
+      key: 'account',
+      label: '账户密码登录',
+      children: (
         <>
           <ProFormText
             name="username"
@@ -119,13 +132,41 @@ const Login = (props: ILoginProps) => {
             ]}
           />
         </>
-      )}
-      {loginType === 'scan' && (
+      ),
+    },
+    {
+      key: 'scan',
+      label: '扫码登录',
+      children: (
         <div className={'justify-center items-center flex flex-col'}>
-          <Image src={qrcodeInfo?.image} height={138} width={138} />
+          <Image
+            src={qrcodeInfo?.image}
+            height={138}
+            width={138}
+            preview={false}
+          />
           <h3>{QRCODE_STATUS_MAP_TITLE[qrcodeStatus]}</h3>
         </div>
-      )}
+      ),
+    },
+  ];
+
+  return (
+    <LoginForm
+      title="会议室预定系统管理端"
+      subTitle="zxp"
+      onFinish={handleFinish}
+      initialValues={{
+        username: 'zhangsan',
+        password: '123456',
+      }}
+    >
+      <Tabs
+        centered
+        activeKey={loginType}
+        onChange={handleLoginTypeChange}
+        items={items}
+      />
       <div className="flex justify-between mb-8px ">
         <Link to="/register">注册账号</Link>
         <Link to="/updatePassword">忘记密码</Link>

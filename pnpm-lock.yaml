@@ -18,6 +18,7 @@ specifiers:
   prettier: ^2.8.7
   prettier-plugin-organize-imports: ^3.2.2
   prettier-plugin-packagejson: ^2.4.3
+  query-string: ^8.1.0
   typescript: ^5.0.3
   unocss: ^0.55.7
 
@@ -31,6 +32,7 @@ dependencies:
   await-to-js: registry.npmjs.org/await-to-js/3.0.0
   localforage: registry.npmjs.org/localforage/1.10.0
   lodash-es: registry.npmjs.org/lodash-es/4.17.21
+  query-string: registry.npmjs.org/query-string/8.1.0
   unocss: registry.npmjs.org/unocss/0.55.7
 
 devDependencies:
@@ -6907,6 +6909,13 @@ packages:
     engines: {node: '>=0.10'}
     dev: false
 
+  registry.npmjs.org/decode-uri-component/0.4.1:
+    resolution: {integrity: sha512-+8VxcR21HhTy8nOt6jf20w0c9CADrw1O8d+VZ/YzzCt4bJ3uBjw+D1q2osAB8RnpwwaeYBxy0HyKQxD5JBMuuQ==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.4.1.tgz}
+    name: decode-uri-component
+    version: 0.4.1
+    engines: {node: '>=14.16'}
+    dev: false
+
   registry.npmjs.org/deep-is/0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/deep-is/-/deep-is-0.1.4.tgz}
     name: deep-is
@@ -7953,6 +7962,13 @@ packages:
     name: filter-obj
     version: 1.1.0
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  registry.npmjs.org/filter-obj/5.1.0:
+    resolution: {integrity: sha512-qWeTREPoT7I0bifpPUXtxkZJ1XJzxWtfoWWkdVGqa+eCr3SHW/Ocp89o8vLvbUuQnadybJpjOKu4V+RwO6sGng==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/filter-obj/-/filter-obj-5.1.0.tgz}
+    name: filter-obj
+    version: 5.1.0
+    engines: {node: '>=14.16'}
     dev: false
 
   registry.npmjs.org/find-up/4.1.0:
@@ -11444,6 +11460,17 @@ packages:
       strict-uri-encode: registry.npmjs.org/strict-uri-encode/2.0.0
     dev: false
 
+  registry.npmjs.org/query-string/8.1.0:
+    resolution: {integrity: sha512-BFQeWxJOZxZGix7y+SByG3F36dA0AbTy9o6pSmKFcFz7DAj0re9Frkty3saBn3nHo3D0oZJ/+rx3r8H8r8Jbpw==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/query-string/-/query-string-8.1.0.tgz}
+    name: query-string
+    version: 8.1.0
+    engines: {node: '>=14.16'}
+    dependencies:
+      decode-uri-component: registry.npmjs.org/decode-uri-component/0.4.1
+      filter-obj: registry.npmjs.org/filter-obj/5.1.0
+      split-on-first: registry.npmjs.org/split-on-first/3.0.0
+    dev: false
+
   registry.npmjs.org/querystring-es3/0.2.1:
     resolution: {integrity: sha512-773xhDQnZBMFobEiztv8LIl70ch5MSF/jUQVlhwFyBILqq96anmoctVIYz+ZRp0qbCKATTn6ev02M3r7Ga5vqA==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz}
     name: querystring-es3
@@ -13423,6 +13450,13 @@ packages:
     name: split-on-first
     version: 1.1.0
     engines: {node: '>=6'}
+    dev: false
+
+  registry.npmjs.org/split-on-first/3.0.0:
+    resolution: {integrity: sha512-qxQJTx2ryR0Dw0ITYyekNQWpz6f8dGd7vffGNflQQ3Iqj9NJ6qiZ7ELpZsJ/QBhIVAiDfXdag3+Gp8RvWa62AA==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/split-on-first/-/split-on-first-3.0.0.tgz}
+    name: split-on-first
+    version: 3.0.0
+    engines: {node: '>=12'}
     dev: false
 
   registry.npmjs.org/split2/4.2.0:

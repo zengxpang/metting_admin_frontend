@@ -33,6 +33,12 @@ export default defineConfig({
       layout: false,
     },
     {
+      name: '确认登录',
+      path: '/loginConfirm',
+      component: './LoginConfirm',
+      layout: false,
+    },
+    {
       name: '修改信息',
       path: '/updateInfo',
       component: './UpdateInfo',
