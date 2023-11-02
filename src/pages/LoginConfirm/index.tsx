@@ -4,7 +4,6 @@ import queryString from 'query-string';
 import { request } from '@umijs/max';
 import to from 'await-to-js';
 import { isNull } from 'lodash-es';
-import localforage from 'localforage';
 
 interface ILoginConfirmProps {}
 
@@ -20,22 +19,26 @@ const LoginConfirm = (props: ILoginConfirmProps) => {
   });
 
   const handleLoginAdmin = async () => {
-    const [err] = await to(request(`/qrcode/confirm?qrcodeId=${qrcodeId}`));
+    const [err, res] = await to(
+      request('/user/admin/login', {
+        method: 'post',
+        data: {
+          username: 'zhangsan',
+          password: '1111111',
+        },
+      }),
+    );
     if (isNull(err)) {
-      // await localforage.setItem('access_token', res.accessToken);
-      // await localforage.setItem('refresh_token', res.refreshToken);
-      // await localforage.setItem('user_info', res.userInfo);
-      message.success('登录admin成功');
-    }
-  };
-
-  const handleLoginUser = async () => {
-    const [err] = await to(request(`/qrcode/confirm?qrcodeId=${qrcodeId}`));
-    if (isNull(err)) {
-      // await localforage.setItem('access_token', res.accessToken);
-      // await localforage.setItem('refresh_token', res.refreshToken);
-      // await localforage.setItem('user_info', res.userInfo);
-      message.success('登录user成功');
+      const [theErr, _] = await to(
+        request(`/qrcode/confirm?qrcodeId=${qrcodeId}`, {
+          headers: {
+            Authorization: `Bearer ${res.accessToken}`,
+          },
+        }),
+      );
+      if (isNull(theErr)) {
+        message.success('登录admin成功');
+      }
     }
   };
 
@@ -58,9 +61,6 @@ const LoginConfirm = (props: ILoginConfirmProps) => {
       <Space size={32}>
         <Button type="primary" onClick={handleLoginAdmin}>
           登录 admin
-        </Button>
-        <Button type="primary" danger onClick={handleLoginUser}>
-          登录 user
         </Button>
         <Button onClick={handleLoginCancel}>取消登录</Button>
       </Space>

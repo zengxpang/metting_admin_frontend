@@ -2,14 +2,14 @@ import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link, request } from '@umijs/max';
 import to from 'await-to-js';
-import { isNull } from 'lodash-es';
+import { isEmpty, isNull } from 'lodash-es';
 import { Image, message, Tabs, TabsProps } from 'antd';
 import localforage from 'localforage';
 import { useNavigate } from '@umijs/max';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
+import { useAsyncEffect, useRafInterval, useUnmount } from 'ahooks';
 
 import { QRCODE_STATUS_MAP_TITLE } from './constants';
-import { useRafInterval, useUnmount } from 'ahooks';
 
 // no-scan 未扫描
 // scan-wait-confirm -已扫描，等待用户确认
@@ -38,6 +38,9 @@ const Login = (props: ILoginProps) => {
     undefined,
   );
   const [qrcodeStatus, setQrcodeStatus] = useState<IQrcodeStatus>('no-scan');
+  const [qrcodeResult, setQrcodeResult] = useState<IKeyValue | undefined>(
+    undefined,
+  );
   const [delay, setDelay] = useState<number | undefined>(undefined); // undefined 为不轮询
 
   const generateQrcode = async () => {
@@ -52,16 +55,36 @@ const Login = (props: ILoginProps) => {
     if (!qrcodeInfo) return;
     const [err, res] = await to<{
       status: IQrcodeStatus;
-      userInfo?: IKeyValue;
+      userInfo?: string;
     }>(request(`/qrcode/check?qrcodeId=${qrcodeInfo.qrcodeId}`));
     if (isNull(err)) {
       setQrcodeStatus(res!.status);
+      if (res!.status === 'scan-confirm' && res) {
+        setQrcodeResult(res);
+      }
     }
   };
 
   const clear = useRafInterval(async () => {
     await checkQrcode();
   }, delay);
+
+  useAsyncEffect(async () => {
+    if (['scan-confirm', 'scan-cancel'].includes(qrcodeStatus)) {
+      setDelay(undefined);
+      clear();
+    }
+    if (qrcodeStatus === 'scan-confirm' && !isEmpty(qrcodeResult)) {
+      await localforage.setItem('access_token', qrcodeResult?.data.accessToken);
+      await localforage.setItem(
+        'refresh_token',
+        qrcodeResult?.data.refreshToken,
+      );
+      await localforage.setItem('user_info', qrcodeResult?.data.userInfo);
+      message.success('扫码登录成功');
+      navigate('/');
+    }
+  }, [qrcodeStatus, qrcodeResult]);
 
   useUnmount(() => {
     clear();
