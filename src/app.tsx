@@ -9,6 +9,7 @@ import to from 'await-to-js';
 import { refreshToken } from '@/services';
 import { request as maxRequest, history } from '@umijs/max';
 import { message } from 'antd';
+import { isNull } from 'lodash-es';
 
 export async function getInitialState(): Promise<{ name: string }> {
   return { name: '@umijs/max' };
@@ -56,27 +57,41 @@ export const request: RequestConfig = {
       },
       async (error: any) => {
         const { data, config } = error.response;
+
         if (refreshing) {
           return new Promise((resolve) => {
             queue.push({ config, resolve });
           });
         }
-        if (data.code === 401 && !config.url.includes('/user/refresh')) {
+
+        const refresh_token = await localforage.getItem('refresh_token');
+
+        if (
+          data.code === 401 &&
+          !config.url.includes('/user/refresh') &&
+          !isNull(refresh_token)
+        ) {
           refreshing = true;
-          const [_, res] = await to(refreshToken());
-          await localforage.setItem('access_token', res.accessToken);
-          await localforage.setItem('refresh_token', res.refreshToken);
-          refreshing = false;
-          if (res.status === 200) {
-            queue.forEach(({ config, resolve }) => {
-              resolve(maxRequest(config));
-            });
-            return maxRequest(config);
-          } else {
-            message.error(res.data);
-            history.push('/login');
+          const [err, res] = await to(refreshToken());
+          if (isNull(err)) {
+            await localforage.setItem('access_token', res.accessToken);
+            await localforage.setItem('refresh_token', res.refreshToken);
+            refreshing = false;
+            if (res.status === 200) {
+              queue.forEach(({ config, resolve }) => {
+                resolve(maxRequest(config));
+              });
+              return maxRequest(config);
+            } else {
+              message.error(res.data);
+              history.push('/login');
+            }
           }
+        } else {
+          message.error(data.data);
+          history.push('/login');
         }
+
         return Promise.reject(error.response.data);
       },
     ],
