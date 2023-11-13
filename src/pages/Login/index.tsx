@@ -101,8 +101,8 @@ const Login = (props: ILoginProps) => {
       }),
     );
     if (isNull(err)) {
-      await localforage.setItem('access_token', res.accessToken);
-      await localforage.setItem('refresh_token', res.refreshToken);
+      await localforage.setItem('access_token', res.access_token);
+      await localforage.setItem('refresh_token', res.refresh_token);
       await localforage.setItem('user_info', res.userInfo);
       message.success('登录成功');
       navigate('/');
@@ -181,7 +181,7 @@ const Login = (props: ILoginProps) => {
       onFinish={handleFinish}
       initialValues={{
         username: 'zhangsan',
-        password: '123456',
+        password: '1111111',
       }}
     >
       <Tabs

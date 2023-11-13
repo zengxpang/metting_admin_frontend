@@ -7,9 +7,9 @@ import localforage from 'localforage';
 import { Setting } from '@/components';
 import to from 'await-to-js';
 import { refreshToken } from '@/services';
-import { request as maxRequest, history } from '@umijs/max';
+import { history } from '@umijs/max';
 import { message } from 'antd';
-import { isNull } from 'lodash-es';
+import { isEmpty, isNull } from 'lodash-es';
 
 export async function getInitialState(): Promise<{ name: string }> {
   return { name: '@umijs/max' };
@@ -74,18 +74,16 @@ export const request: RequestConfig = {
           refreshing = true;
           const [err, res] = await to(refreshToken());
           if (isNull(err)) {
-            await localforage.setItem('access_token', res.accessToken);
-            await localforage.setItem('refresh_token', res.refreshToken);
+            await localforage.setItem('access_token', res.access_token);
+            await localforage.setItem('refresh_token', res.refresh_token);
             refreshing = false;
-            if (res.status === 200) {
+            //TODO  有问题不会重新发起请求
+            if (!isEmpty(queue)) {
               queue.forEach(({ config, resolve }) => {
-                resolve(maxRequest(config));
+                resolve(config);
               });
-              return maxRequest(config);
-            } else {
-              message.error(res.data);
-              history.push('/login');
             }
+            return config;
           }
         } else {
           message.error(data.data);

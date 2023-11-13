@@ -46,7 +46,7 @@ const UserManage = () => {
             alt={'avatar'}
             width={30}
             height={30}
-            src={`http://localhost:3000/${record.headPic}`}
+            src={`http://localhost:30086/${record.headPic}`}
           />
         ) : (
           '-'

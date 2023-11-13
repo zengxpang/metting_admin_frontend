@@ -9,7 +9,7 @@ interface IUploadAvatarProps {
   value?: string;
 }
 
-const prefix = 'http://localhost:3000/';
+const prefix = 'http://localhost:30086/';
 
 const UploadAvatar = (props: IUploadAvatarProps) => {
   const { onChange, value } = props;
