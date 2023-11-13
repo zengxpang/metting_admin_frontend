@@ -72,10 +72,8 @@ export const request: RequestConfig = {
           !isNull(refresh_token)
         ) {
           refreshing = true;
-          const [err, res] = await to(refreshToken());
-          if (isNull(err)) {
-            await localforage.setItem('access_token', res.access_token);
-            await localforage.setItem('refresh_token', res.refresh_token);
+          const res = await refreshToken();
+          if (!isEmpty(res)) {
             refreshing = false;
             //TODO  有问题不会重新发起请求
             if (!isEmpty(queue)) {
