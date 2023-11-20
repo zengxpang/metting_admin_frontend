@@ -5,7 +5,6 @@
 import { RequestConfig } from '@@/plugin-request/request';
 import localforage from 'localforage';
 import { Setting } from '@/components';
-import to from 'await-to-js';
 import { refreshToken } from '@/services';
 import { history } from '@umijs/max';
 import { message } from 'antd';
@@ -55,41 +54,44 @@ export const request: RequestConfig = {
       (response: any) => {
         return response?.data;
       },
-      async (error: any) => {
-        const { data, config } = error.response;
-
-        if (refreshing) {
-          return new Promise((resolve) => {
-            queue.push({ config, resolve });
-          });
-        }
-
-        const refresh_token = await localforage.getItem('refresh_token');
-
-        if (
-          data.code === 401 &&
-          !config.url.includes('/user/refresh') &&
-          !isNull(refresh_token)
-        ) {
-          refreshing = true;
-          const res = await refreshToken();
-          if (!isEmpty(res)) {
-            refreshing = false;
-            //TODO  有问题不会重新发起请求
-            if (!isEmpty(queue)) {
-              queue.forEach(({ config, resolve }) => {
-                resolve(config);
-              });
-            }
-            return config;
-          }
-        } else {
-          message.error(data.data);
-          history.push('/login');
-        }
-
+      (error: any) => {
         return Promise.reject(error.response.data);
       },
+      // async (error: any) => {
+      //   const { data, config } = error.response;
+      //
+      //   if (refreshing) {
+      //     return new Promise((resolve) => {
+      //       queue.push({ config, resolve });
+      //     });
+      //   }
+      //
+      //   const refresh_token = await localforage.getItem('refresh_token');
+      //
+      //   if (
+      //     data.code === 401 &&
+      //     !config.url.includes('/user/refresh') &&
+      //     !isNull(refresh_token)
+      //   ) {
+      //     refreshing = true;
+      //     const res = await refreshToken();
+      //     if (!isEmpty(res)) {
+      //       refreshing = false;
+      //       //TODO  有问题不会重新发起请求
+      //       if (!isEmpty(queue)) {
+      //         queue.forEach(({ config, resolve }) => {
+      //           resolve(config);
+      //         });
+      //       }
+      //       return config;
+      //     }
+      //   } else {
+      //     message.error(data.data);
+      //     history.push('/login');
+      //   }
+      //
+      //   return Promise.reject(error.response.data);
+      // },
     ],
   ],
 };

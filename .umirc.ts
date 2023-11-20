@@ -9,11 +9,6 @@ export default defineConfig({
   layout: {
     title: '会议室预定系统管理端',
   },
-  plugins: [require.resolve('@umijs/plugins/dist/unocss')],
-  unocss: {
-    // 检测 className 的文件范围，若项目不包含 src 目录，可使用 `pages/**/*.tsx`
-    watch: ['src/**/*.tsx', 'src/**/*.jsx'],
-  },
   proxy: {
     '/api': {
       target: 'http://localhost:30086/',
@@ -51,6 +46,12 @@ export default defineConfig({
       hideInMenu: true,
     },
     {
+      name: '注册',
+      path: '/register',
+      component: './Register',
+      layout: false,
+    },
+    {
       name: '会议室管理',
       path: '/meetingRoomManage',
       component: './MeetingRoomManage',
@@ -62,8 +63,8 @@ export default defineConfig({
     },
     {
       name: '预定管理',
-      path: 'scheduleManage',
-      component: './ScheduleManage',
+      path: '/bookingManage',
+      component: './BookingManage',
     },
   ],
   npmClient: 'pnpm',

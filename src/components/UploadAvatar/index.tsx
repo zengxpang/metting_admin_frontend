@@ -2,7 +2,7 @@ import { message, Upload, UploadProps } from 'antd';
 import { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
-import { noop } from 'unocss';
+import { noop } from 'lodash-es';
 
 interface IUploadAvatarProps {
   onChange?: (url: string) => void;
