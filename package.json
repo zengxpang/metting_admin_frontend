@@ -20,7 +20,8 @@
     "dayjs": "^1.11.10",
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
-    "query-string": "^8.1.0"
+    "query-string": "^8.1.0",
+    "recharts": "^2.10.1"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.9",

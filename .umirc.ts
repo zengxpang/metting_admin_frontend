@@ -66,6 +66,11 @@ export default defineConfig({
       path: '/bookingManage',
       component: './BookingManage',
     },
+    {
+      name: '统计',
+      path: '/statistic',
+      component: './Statistic',
+    },
   ],
   npmClient: 'pnpm',
 });
