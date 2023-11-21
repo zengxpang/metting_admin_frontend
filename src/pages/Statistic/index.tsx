@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import {
+  BarChart,
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
+  Bar,
+  Rectangle,
 } from 'recharts';
 import {
   ProForm,
@@ -47,6 +49,7 @@ const Statistic = (props: IStatistic) => {
   );
 
   useAsyncEffect(async () => {
+    if (!dateRange || dateRange.length < 2) return;
     const startTime = dateRange[0];
     const endTime = dateRange[1];
     setUserBookingCount(await getUserBookingCount(startTime, endTime));
@@ -63,31 +66,70 @@ const Statistic = (props: IStatistic) => {
     return type === '1' ? (
       <>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={userBookingCount} margin={{ top: 16 }}>
+          <LineChart
+            data={userBookingCount}
+            margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
+          >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="username" />
             <YAxis />
             <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="bookingCount" stroke="#F98110" />
+            <Line type="monotone" dataKey="bookingCount" stroke="#82ca9d" />
           </LineChart>
         </ResponsiveContainer>
-
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={meetingRoomUsedCount} margin={{ top: 16 }}>
+          <LineChart
+            data={meetingRoomUsedCount}
+            margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
+          >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="meetingRoomName" />
             <YAxis />
             <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="usedCount" stroke="#009944" />
+            <Line type="monotone" dataKey="usedCount" stroke="#8884d8" />
           </LineChart>
         </ResponsiveContainer>
       </>
     ) : type === '2' ? (
       <>
-        <p>1212</p>
-        <p>555</p>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            width={500}
+            height={300}
+            data={userBookingCount}
+            margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
+            maxBarSize={12}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="username" />
+            <YAxis />
+            <Tooltip />
+            <Bar
+              dataKey="bookingCount"
+              fill="#82ca9d"
+              activeBar={<Rectangle fill="gold" stroke="purple" />}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            width={500}
+            height={300}
+            data={meetingRoomUsedCount}
+            margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
+            maxBarSize={12}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="meetingRoomName" />
+            <YAxis />
+            <Tooltip />
+            <Bar
+              dataKey="usedCount"
+              fill="#8884d8"
+              activeBar={<Rectangle fill="pink" stroke="blue" />}
+            />
+          </BarChart>
+        </ResponsiveContainer>
       </>
     ) : (
       <>
@@ -144,11 +186,14 @@ const Statistic = (props: IStatistic) => {
         style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
+          justifyItems: 'center',
           rowGap: 16,
-          height: 400,
+          height: 300,
         }}
       >
         {renderChart()}
+        <strong>用户预定情况</strong>
+        <strong>会议室使用情况</strong>
       </div>
     </>
   );
