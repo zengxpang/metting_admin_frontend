@@ -6,9 +6,11 @@ import { RequestConfig } from '@@/plugin-request/request';
 import localforage from 'localforage';
 import { Setting } from '@/components';
 import { refreshToken } from '@/services';
-import { history } from '@umijs/max';
+import { history, createGlobalStyle } from '@umijs/max';
 import { message } from 'antd';
 import { isEmpty, isNull } from 'lodash-es';
+
+import '../global.css';
 
 export async function getInitialState(): Promise<{ name: string }> {
   return { name: '@umijs/max' };
@@ -94,6 +96,10 @@ export const request: RequestConfig = {
       // },
     ],
   ],
+};
+
+export const styledComponents = {
+  GlobalStyle: createGlobalStyle``,
 };
 
 localforage.config({

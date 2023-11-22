@@ -1,6 +1,6 @@
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Link, request } from '@umijs/max';
+import { Link, request, styled } from '@umijs/max';
 import to from 'await-to-js';
 import { isEmpty, isNull } from 'lodash-es';
 import { Image, message, Tabs, TabsProps } from 'antd';
@@ -8,8 +8,30 @@ import localforage from 'localforage';
 import { useNavigate } from '@umijs/max';
 import { useState } from 'react';
 import { useAsyncEffect, useRafInterval, useUnmount } from 'ahooks';
+import bg from '@/assets/bg.svg';
 
 import { QRCODE_STATUS_MAP_TITLE } from './constants';
+
+const Wrap = styled.div`
+  background-image: url('${bg}');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  height: 100%;
+`;
+
+const ScanWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const FooterWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+`;
 
 // no-scan 未扫描
 // scan-wait-confirm -已扫描，等待用户确认
@@ -161,7 +183,7 @@ const Login = (props: ILoginProps) => {
       key: 'scan',
       label: '扫码登录',
       children: (
-        <div className={'justify-center items-center flex flex-col'}>
+        <ScanWrap>
           <Image
             src={qrcodeInfo?.image}
             height={138}
@@ -169,32 +191,34 @@ const Login = (props: ILoginProps) => {
             preview={false}
           />
           <h3>{QRCODE_STATUS_MAP_TITLE[qrcodeStatus]}</h3>
-        </div>
+        </ScanWrap>
       ),
     },
   ];
 
   return (
-    <LoginForm
-      title="会议室预定系统管理端"
-      subTitle="zxp"
-      onFinish={handleFinish}
-      initialValues={{
-        username: 'zhangsan',
-        password: '1111111',
-      }}
-    >
-      <Tabs
-        centered
-        activeKey={loginType}
-        onChange={handleLoginTypeChange}
-        items={items}
-      />
-      <div className="flex justify-between mb-8px ">
-        <Link to="/register">注册账号</Link>
-        <Link to="/updatePassword">忘记密码</Link>
-      </div>
-    </LoginForm>
+    <Wrap>
+      <LoginForm
+        title="会议室预定系统管理端"
+        subTitle="zxp"
+        onFinish={handleFinish}
+        initialValues={{
+          username: 'zhangsan',
+          password: '1111111',
+        }}
+      >
+        <Tabs
+          centered
+          activeKey={loginType}
+          onChange={handleLoginTypeChange}
+          items={items}
+        />
+        <FooterWrap>
+          <Link to="/register">注册账号</Link>
+          <Link to="/updatePassword">忘记密码</Link>
+        </FooterWrap>
+      </LoginForm>
+    </Wrap>
   );
 };
 

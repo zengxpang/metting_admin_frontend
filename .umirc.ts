@@ -6,6 +6,7 @@ export default defineConfig({
   model: {},
   initialState: {},
   request: {},
+  styledComponents: {},
   layout: {
     title: '会议室预定系统管理端',
   },

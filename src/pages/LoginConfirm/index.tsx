@@ -1,9 +1,18 @@
 import { Button, message, Space } from 'antd';
 import { useMount } from 'ahooks';
 import queryString from 'query-string';
-import { request } from '@umijs/max';
+import { request, styled } from '@umijs/max';
 import to from 'await-to-js';
 import { isNull } from 'lodash-es';
+
+const Wrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+`;
 
 interface ILoginConfirmProps {}
 
@@ -52,12 +61,8 @@ const LoginConfirm = (props: ILoginConfirmProps) => {
   };
 
   return (
-    <div
-      className={
-        'flex flex-col justify-center items-center w-screen h-screen bg-orange'
-      }
-    >
-      <h3 className={'mb-8'}>俺要登录～</h3>
+    <Wrap>
+      <h3 style={{ marginBottom: 16 }}>俺要登录～</h3>
       <Space size={32}>
         <Button type="primary" onClick={handleLoginAdmin}>
           登录 admin
@@ -65,7 +70,7 @@ const LoginConfirm = (props: ILoginConfirmProps) => {
         <Button onClick={handleLoginCancel}>取消登录</Button>
       </Space>
       {qrcodeId}
-    </div>
+    </Wrap>
   );
 };
 

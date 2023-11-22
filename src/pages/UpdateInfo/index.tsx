@@ -16,6 +16,14 @@ import {
 import { Form, message } from 'antd';
 import { isNull } from 'lodash-es';
 import { UploadAvatar } from '@/components';
+import { styled } from '@umijs/max';
+
+const Wrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
 
 interface IUpdateInfoProps {}
 
@@ -58,7 +66,7 @@ const UpdateInfo = (props: IUpdateInfoProps) => {
   };
 
   return (
-    <div className="flex flex-col  justify-center items-center">
+    <Wrap>
       <ProForm
         layout="vertical"
         onFinish={handleFinish}
@@ -139,7 +147,7 @@ const UpdateInfo = (props: IUpdateInfoProps) => {
           onGetCaptcha={handleGetCaptcha}
         />
       </ProForm>
-    </div>
+    </Wrap>
   );
 };
 
