@@ -3,7 +3,7 @@ FROM node:18.0-alpine3.14 as build-stage
 
 WORKDIR /app
 
-# 复制 package.json 和 pnpm 的锁文件到容器中
+# 复制 package.json
 COPY package.json .
 
 # 安装依赖
@@ -25,10 +25,7 @@ COPY --from=build-stage /app/node_modules /app/node_modules
 
 WORKDIR /app
 
-# 还是有问题
-RUN npm install -g serve
-
 # 暴露应用所使用的端口
-EXPOSE 3000
+EXPOSE 8000
 
-CMD ["npm", "run", "serve"]
+CMD ["npm", "run", "dev"]

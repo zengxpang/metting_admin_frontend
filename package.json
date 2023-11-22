@@ -8,8 +8,7 @@
     "prepare": "husky install",
     "postinstall": "max setup",
     "setup": "max setup",
-    "start": "npm run dev",
-    "serve": "npx serve dist"
+    "start": "npm run dev"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
