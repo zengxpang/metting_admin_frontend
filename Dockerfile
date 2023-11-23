@@ -1,31 +1,13 @@
-# 阶段一：安装依赖和构建应用
-FROM node:18.0-alpine3.14 as build-stage
-
+FROM node:18.0-alpine3.14
 WORKDIR /app
-
-# 复制 package.json
-COPY package.json .
-
-# 安装依赖
+COPY package.json ./
+RUN npm config set registry registry.npmmirror.com
 RUN npm install
-
-# 复制应用程序的其他文件到容器中
 COPY . .
-
-# 构建应用
 RUN npm run build
-
-# 阶段二：运行应用
-FROM node:18.0-alpine3.14 as production-stage
-
-# 将阶段一构建的产物复制到新的镜像中
-COPY --from=build-stage /app/dist /app
-COPY --from=build-stage /app/package.json /app/package.json
-COPY --from=build-stage /app/node_modules /app/node_modules
-
-WORKDIR /app
-
-# 暴露应用所使用的端口
-EXPOSE 8000
-
-CMD ["npm", "run", "dev"]
+FROM nginx:alpine
+COPY --from=0 /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+# 启动Nginx
+CMD ["/usr/sbin/nginx","-g","daemon off;"]
