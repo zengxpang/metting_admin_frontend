@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
-import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
+import { ActionType, ProColumns } from '@ant-design/pro-components';
 import { request } from '@umijs/max';
 import to from 'await-to-js';
 import { Image, Tag } from 'antd';
+
+import { BaseProTable } from '@/components';
 
 const UserManage = () => {
   const actionRef = useRef<ActionType>();
@@ -109,7 +111,7 @@ const UserManage = () => {
     },
   ];
   return (
-    <ProTable<IKeyValue>
+    <BaseProTable<IKeyValue>
       rowKey={'id'}
       columns={columns}
       actionRef={actionRef}

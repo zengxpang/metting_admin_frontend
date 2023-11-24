@@ -57,6 +57,11 @@ export const request: RequestConfig = {
         return response?.data;
       },
       (error: any) => {
+        const { data } = error.response;
+        if (data.code === 401) {
+          message.error(data.data);
+          history.push('/login');
+        }
         return Promise.reject(error.response.data);
       },
       // async (error: any) => {

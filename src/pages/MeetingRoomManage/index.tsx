@@ -1,11 +1,13 @@
 import React, { useRef } from 'react';
-import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
+import { ActionType, ProColumns } from '@ant-design/pro-components';
 import { request } from '@umijs/max';
 import to from 'await-to-js';
 import { Button, message, Popconfirm, Tag } from 'antd';
-import { deleteMeetingRoom, IMeetingRoom } from '@/services';
 import { isNull } from 'lodash-es';
+
+import { deleteMeetingRoom, IMeetingRoom } from '@/services';
 import CreateAndUpdateDrawer from '@/pages/MeetingRoomManage/components/CreateAndUpdateDrawer';
+import { BaseProTable } from '@/components';
 
 interface IMeetingRoomManageProps {}
 
@@ -131,7 +133,7 @@ const MeetingRoomManage = (props: IMeetingRoomManageProps) => {
   ];
 
   return (
-    <ProTable<IKeyValue>
+    <BaseProTable<IKeyValue>
       rowKey={'id'}
       columns={columns}
       actionRef={actionRef}

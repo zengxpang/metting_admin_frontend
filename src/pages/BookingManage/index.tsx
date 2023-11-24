@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
+import { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button, message, Popconfirm, Space, Tag } from 'antd';
 import to from 'await-to-js';
 import { request } from '@umijs/max';
@@ -7,9 +7,10 @@ import dayjs from 'dayjs';
 import { isNull, pickBy } from 'lodash-es';
 
 import { getRGBA } from '@/utils';
+import { BaseProTable } from '@/components';
+import { applyBooking, rejectBooking, unbindBooking } from '@/services';
 
 import { STATUS_MAP_TEXT, STATUS_MAP_COLOR, IStatus } from './constants';
-import { applyBooking, rejectBooking, unbindBooking } from '@/services';
 
 const BookingManage = () => {
   const actionRef = useRef<ActionType>();
@@ -184,7 +185,7 @@ const BookingManage = () => {
   ];
 
   return (
-    <ProTable<IKeyValue>
+    <BaseProTable<IKeyValue>
       rowKey={'id'}
       columns={columns}
       actionRef={actionRef}
