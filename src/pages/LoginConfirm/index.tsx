@@ -32,8 +32,8 @@ const LoginConfirm = (props: ILoginConfirmProps) => {
       request('/user/admin/login', {
         method: 'post',
         data: {
-          username: 'zhangsan',
-          password: '1111111',
+          username: 'zxp',
+          password: '123456',
         },
       }),
     );

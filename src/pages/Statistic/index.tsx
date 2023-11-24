@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   BarChart,
   CartesianGrid,
@@ -19,8 +19,32 @@ import {
 import { useAsyncEffect } from 'ahooks';
 import dayjs from 'dayjs';
 import { Empty } from 'antd';
+import { isEmpty } from 'lodash-es';
+import { styled } from '@umijs/max';
 
 import { getMeetingRoomUsedCount, getUserBookingCount } from '@/services';
+
+const StyledEmpty = styled(Empty)`
+  width: 100%;
+  height: 267px;
+  margin: 0 16px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+`;
+
+const ChartWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+  row-gap: 16px;
+  height: 300px;
+  box-sizing: border-box;
+`;
+
+const ChartTitle = styled.strong`
+  color: #666;
+`;
 
 interface IStatistic {}
 
@@ -65,76 +89,88 @@ const Statistic = (props: IStatistic) => {
   const renderChart = () => {
     return type === '1' ? (
       <>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={userBookingCount}
-            margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="username" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="bookingCount" stroke="#82ca9d" />
-          </LineChart>
-        </ResponsiveContainer>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={meetingRoomUsedCount}
-            margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="meetingRoomName" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="usedCount" stroke="#8884d8" />
-          </LineChart>
-        </ResponsiveContainer>
+        {isEmpty(userBookingCount) ? (
+          <StyledEmpty />
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={userBookingCount}
+              margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="username" />
+              <YAxis />
+              <Tooltip />
+              <Line type="monotone" dataKey="bookingCount" stroke="#82ca9d" />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
+        {isEmpty(meetingRoomUsedCount) ? (
+          <StyledEmpty />
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={meetingRoomUsedCount}
+              margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="meetingRoomName" />
+              <YAxis />
+              <Tooltip />
+              <Line type="monotone" dataKey="usedCount" stroke="#8884d8" />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
       </>
     ) : type === '2' ? (
       <>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            width={500}
-            height={300}
-            data={userBookingCount}
-            margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
-            maxBarSize={12}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="username" />
-            <YAxis />
-            <Tooltip />
-            <Bar
-              dataKey="bookingCount"
-              fill="#82ca9d"
-              activeBar={<Rectangle fill="gold" stroke="purple" />}
-            />
-          </BarChart>
-        </ResponsiveContainer>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            width={500}
-            height={300}
-            data={meetingRoomUsedCount}
-            margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
-            maxBarSize={12}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="meetingRoomName" />
-            <YAxis />
-            <Tooltip />
-            <Bar
-              dataKey="usedCount"
-              fill="#8884d8"
-              activeBar={<Rectangle fill="pink" stroke="blue" />}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+        {isEmpty(userBookingCount) ? (
+          <StyledEmpty />
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={userBookingCount}
+              margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
+              maxBarSize={12}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="username" />
+              <YAxis />
+              <Tooltip />
+              <Bar
+                dataKey="bookingCount"
+                fill="#82ca9d"
+                activeBar={<Rectangle fill="gold" stroke="purple" />}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
+        {isEmpty(meetingRoomUsedCount) ? (
+          <StyledEmpty />
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={meetingRoomUsedCount}
+              margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
+              maxBarSize={12}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="meetingRoomName" />
+              <YAxis />
+              <Tooltip />
+              <Bar
+                dataKey="usedCount"
+                fill="#8884d8"
+                activeBar={<Rectangle fill="pink" stroke="blue" />}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </>
     ) : (
       <>
-        <Empty />
-        <Empty />
+        <StyledEmpty />
+        <StyledEmpty />
       </>
     );
   };
@@ -172,7 +208,7 @@ const Statistic = (props: IStatistic) => {
           name="type"
           valueEnum={{
             1: '折线图',
-            2: '饼图',
+            2: '柱状图',
           }}
           rules={[
             {
@@ -182,19 +218,11 @@ const Statistic = (props: IStatistic) => {
           ]}
         />
       </ProForm>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          justifyItems: 'center',
-          rowGap: 16,
-          height: 300,
-        }}
-      >
+      <ChartWrapper>
         {renderChart()}
-        <strong>用户预定情况</strong>
-        <strong>会议室使用情况</strong>
-      </div>
+        <ChartTitle>用户预定情况</ChartTitle>
+        <ChartTitle>会议室使用情况</ChartTitle>
+      </ChartWrapper>
     </>
   );
 };

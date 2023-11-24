@@ -93,7 +93,7 @@ const UpdateInfo = (props: IUpdateInfoProps) => {
           rules={[
             {
               required: true,
-              message: '请输入头像',
+              message: '请上传头像',
             },
           ]}
         >

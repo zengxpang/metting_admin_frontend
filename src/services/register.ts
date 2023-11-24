@@ -14,6 +14,9 @@ export interface IRegisterUser {
   nickName: string;
   password: string;
   username: string;
+  isAdmin: boolean;
+  phoneNumber?: string;
+  headPic?: string;
 }
 
 export const register = (data: IRegisterUser) => {

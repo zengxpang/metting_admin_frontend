@@ -1,4 +1,8 @@
-import { LoginForm, ProFormText } from '@ant-design/pro-components';
+import {
+  LoginForm,
+  ProFormText,
+  LoginFormProps,
+} from '@ant-design/pro-components';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link, request, styled } from '@umijs/max';
 import to from 'await-to-js';
@@ -8,16 +12,18 @@ import localforage from 'localforage';
 import { useNavigate } from '@umijs/max';
 import { useState } from 'react';
 import { useAsyncEffect, useRafInterval, useUnmount } from 'ahooks';
-import bg from '@/assets/bg.svg';
 
 import { QRCODE_STATUS_MAP_TITLE } from './constants';
 
+// background-image: url('${bg}');
+// background-repeat: no-repeat;
+// background-size: cover;
+// background-attachment: fixed;
 const Wrap = styled.div`
-  background-image: url('${bg}');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
   height: 100%;
+  .ant-pro-form-login-container {
+    justify-content: center;
+  }
 `;
 
 const ScanWrap = styled.div`
@@ -26,7 +32,6 @@ const ScanWrap = styled.div`
   align-items: center;
   justify-content: center;
 `;
-
 const FooterWrap = styled.div`
   display: flex;
   justify-content: space-between;
@@ -203,8 +208,8 @@ const Login = (props: ILoginProps) => {
         subTitle="zxp"
         onFinish={handleFinish}
         initialValues={{
-          username: 'zhangsan',
-          password: '1111111',
+          username: 'zxp',
+          password: '123456',
         }}
       >
         <Tabs
@@ -215,7 +220,6 @@ const Login = (props: ILoginProps) => {
         />
         <FooterWrap>
           <Link to="/register">注册账号</Link>
-          <Link to="/updatePassword">忘记密码</Link>
         </FooterWrap>
       </LoginForm>
     </Wrap>
