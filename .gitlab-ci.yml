@@ -1,0 +1,47 @@
+image: node:18.0-alpine
+
+stages:
+  - install
+  - build
+  - deploy
+
+# 定义需要缓存的目录
+# cache:
+#   key: meeting-admin
+#   paths:
+#     - node_modules
+#     - dist
+
+# job_install:
+#   stage: install
+#   tags:
+#     - meeting_admin_tag
+#   script:
+#     - npm install -g pnpm
+#     - pnpm install --no-frozen-lockfile
+
+# job_build:
+#   stage: build
+#   tags:
+#     - meeting_admin_tag
+#   script:
+#     - npm run build
+#   # 可在流水线上下载本阶段作业的制品
+#   artifacts:
+#     name: "dist"
+#     paths:
+#       - dist
+
+job_deploy:
+  stage: deploy
+  image: docker
+  variables:
+    IMAGE_NAME: meeting_admin_image
+    CONTAINER_NAME: meeting_admin_container
+  tags:
+    - meeting_admin_tag
+  script:
+    - docker build -t ${IMAGE_NAME} .
+    - if [ $(docker ps -aq --filter name=${CONTAINER_NAME}) ]; then docker rm -f ${CONTAINER_NAME}; fi
+    - docker run -d --name ${CONTAINER_NAME} -p 10086:80 ${IMAGE_NAME}
+    - echo "deploy success"
