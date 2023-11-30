@@ -186,6 +186,7 @@ const BookingManage = () => {
 
   return (
     <BaseProTable<IKeyValue>
+      headerTitle={'预定管理'}
       rowKey={'id'}
       columns={columns}
       actionRef={actionRef}

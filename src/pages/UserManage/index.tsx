@@ -112,6 +112,7 @@ const UserManage = () => {
   ];
   return (
     <BaseProTable<IKeyValue>
+      headerTitle={'用户管理'}
       rowKey={'id'}
       columns={columns}
       actionRef={actionRef}

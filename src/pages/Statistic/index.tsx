@@ -178,7 +178,6 @@ const Statistic = (props: IStatistic) => {
   return (
     <>
       <ProForm
-        layout={'inline'}
         style={{
           marginBottom: 24,
         }}

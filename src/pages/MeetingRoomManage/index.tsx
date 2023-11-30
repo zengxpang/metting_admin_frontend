@@ -19,6 +19,8 @@ const MeetingRoomManage = (props: IMeetingRoomManageProps) => {
     if (isNull(err)) {
       message.success('删除成功');
       actionRef.current?.reload();
+    } else {
+      message.error(err.data);
     }
   };
 
@@ -134,6 +136,7 @@ const MeetingRoomManage = (props: IMeetingRoomManageProps) => {
 
   return (
     <BaseProTable<IKeyValue>
+      headerTitle={'会议室管理'}
       rowKey={'id'}
       columns={columns}
       actionRef={actionRef}
